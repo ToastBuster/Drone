@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Data Graph</title>
+    
+  </head>
+  <body>
+    
+    <p id="data">Connecting...</p>
+    <button onclick="start()">Start</button> <button onclick="stop()">Stop</button>&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="Temp Offset">Current Temp:</label>
+    <input type="number" id="TempO" name="Temp Offset" value="73.8">
+
+    <label for="Elevation Offset">Current Altitude:</label>
+    <input type="number" id="ElevationO" name="Elevation Offset" value="1599">
+    
+
+    <button onclick="calculateOffsets()">Calculate Offsets</button>
+
+    <p>Data Points: <span id="points">0</span></p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <p>Temp Offset: <span id="tempoff">0</span>; Elevation Offset: <span id="elevationoff">0</span></p>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <label for="gpoints">Graph Points:</label>
+    <input type="number" id="gpoints" name="gpoints" value="10">
+    <button onclick="downloadtocsv()">Download Data</button>
+
+    <canvas id="tempchart"></canvas>
+    <canvas id="airchart"></canvas>
+    <canvas id="presschart"></canvas>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/JS/reciver.js"></script>
+</html>
