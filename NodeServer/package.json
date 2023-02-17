@@ -1,14 +1,14 @@
 {
-  "name": "nodejs",
-  "version": "1.0.0",
-  "description": "",
+  "name": "datareciver",
+  "version": "1.0",
+  "description": "Node server that recives sensor data and relays it to connected clients",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "",
   "dependencies": {
     "@types/node": "^18.0.6",
     "body-parser": "^1.20.1",
