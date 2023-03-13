@@ -28,14 +28,8 @@ post2data = {
     "coaType":"Reauth",
     "coaSource":"GUEST",
     "coaReason":"Guest+authenticated+for+network+access",
-    "waitForCoA":"true",
-    #"portalSessionId":"",
-    #"token":""
+    "waitForCoA":"true"
 }
-
-
-
-#https://isepdcpolicy2.dpsk12.org:8443/portal/gateway?sessionId=34c8a8c0019cf3a8718dff63&portal=babb8002-19ea-11e5-b84d-000c293e8509&action=cwa&type=drw&token=71ee3d0e9d322a71d04a6c2d1a898e98&redirect=1.1.1.1/
 
 def getvalue(string):
     value = ""
@@ -46,52 +40,51 @@ def getvalue(string):
         else:
             value = value + char
     return value      
-        
-x = requests.get('http://1.1.1.1')
-response = x.text
 
-url = response.find("URL=")
+try:
+    print("Testing internet connection...")
+    google = requests.get("https://www.google.com")
+    print("Internet already works, aborting proccess")
+except:
+    print("Connection Failed, attemting reauth...")
+    try:
+        x = requests.get('http://1.1.1.1')
+        response = x.text
 
-#try:
-URLVal = getvalue(response[(url+4):])
+        url = response.find("URL=")
 
-request = requests.get(URLVal, headers=PostHeaders1)
-print(URLVal)
+        URLVal = getvalue(response[(url+4):])
 
-rescookies = request.cookies
+        request = requests.get(URLVal, headers=PostHeaders1)
 
-post1data["token"] = rescookies["token"]
+        rescookies = request.cookies
 
-#post2data["portalSessionId"] = rescookies["portalSessionId"]
-#post2data["token"] = rescookies["token"]
+        post1data["token"] = rescookies["token"]
 
+        repcook={
+            "token":rescookies["token"],
+            "portalSessionId":rescookies["portalSessionId"],
+            "checkCookiesEnabled":"value",
+            "APPSESSIONID":rescookies["APPSESSIONID"]
+        }
 
-repcook={
-    "token":rescookies["token"],
-    "portalSessionId":rescookies["portalSessionId"],
-    "checkCookiesEnabled":"value",
-    "APPSESSIONID":rescookies["APPSESSIONID"]
-}
-
-r1 = requests.post(host+"/portal/AupSubmit.action?from=AUP", headers=PostHeaders1, data=post1data, cookies=repcook)
-print(r1)
-print("Request 1 Sent!: "+ r1.text)
-#time.sleep(1)
-#
-r2 = requests.post("https://isepdcpolicy3.dpsk12.org:8443/portal/DoCoA.action", headers=PostHeaders1, data=post2data ,cookies=repcook )
-print(r2)
-print("Request 2 Sent!: "+ r2.text)
-print(post2data)
-print(repcook)
-#print(post1data)
-#print(post2data)
-#print(repcook)
-#except:
-#    print("error")
-
-
-
-###Current Problem is request 2 body feild, providing it causeing an error for some reason
+        r1 = requests.post(host+"/portal/AupSubmit.action?from=AUP", headers=PostHeaders1, data=post1data, cookies=repcook)
+        print(r1)
+        if(r1.status_code != 200):
+            print("Error, request 1 failure. Did request format change?")
+        else:
+            r2 = requests.post("https://isepdcpolicy3.dpsk12.org:8443/portal/DoCoA.action", headers=PostHeaders1, data="delayToCoA=0&coaType=Reauth&coaSource=GUEST&coaReason=Guest+authenticated+for+network+access&waitForCoA=true" ,cookies=repcook )
+            print(r2)
+            if(r2.status_code != 200):
+                print("Error, request 2 failure. Did request format change?")     
+            else:
+                try:
+                    google = requests.get("https://www.google.com")
+                    print("Internet is now in working condition! ^-^")
+                except:
+                    print("Wow, somthing went very wrong. No clue how this happend. Try again mabye?")
+    except:
+        print("Connection failure, script may be outdated")
     
 
 
