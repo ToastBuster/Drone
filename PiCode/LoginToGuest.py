@@ -85,6 +85,3 @@ except:
                     print("Wow, somthing went very wrong. No clue how this happend. Try again mabye?")
     except:
         print("Connection failure, script may be outdated")
-    
-
-
